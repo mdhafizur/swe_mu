@@ -29,6 +29,11 @@ const DataVisualization: React.FC = () => {
       x: { title: { display: true, text: "X Coordinate" } },
       y: { title: { display: true, text: "Y Coordinate" } },
     },
+    elements: {
+      point: {
+        radius: 8, // Increase or decrease the value to adjust the size of the dots
+      },
+    },
   };
 
   useEffect(() => {
@@ -127,7 +132,7 @@ const DataVisualization: React.FC = () => {
   const accuracyBeforeUnlearning = calculateAccuracy(dataPoints);
 
   return (
-    <div>
+    <div style={{ margin: "20px" }}>
       <Typography variant="h5">Data Visualization</Typography>
       <Button
         variant="contained"
@@ -144,41 +149,48 @@ const DataVisualization: React.FC = () => {
       >
         Forget Selected Data Points
       </Button>
-      {chartData && (
-        <Scatter
-          data={chartData}
-          options={chartOptions}
-          onGotPointerCapture={(elems: any) => {
-            if (elems.length > 0) {
-              const index = elems[0].index;
-              handleDataPointSelection(index);
-            }
-          }}
-        />
-      )}
-      <div>
-        <Typography variant="h6">Selected Data Points:</Typography>
-        <ul>
-          {dataPoints.map((point, index) => (
-            <li key={index}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={selectedDataPoints.includes(index)}
-                    onChange={() => handleDataPointSelection(index)}
-                  />
-                }
-                label={`Point ${index} (${point.x.toFixed(
-                  2
-                )}, ${point.y.toFixed(2)}) - ${point.label}`}
-              />
-            </li>
-          ))}
-        </ul>
-      </div>
-      <Typography variant="body1">
+
+      <Typography variant="body1" style={{ margin: "10px 0px" }}>
         Accuracy before unlearning: {accuracyBeforeUnlearning.toFixed(2)}%
       </Typography>
+
+      <div style={{ display: "flex", padding: "10px" }}>
+        <div style={{ flex: "1", width: "33.33%" }}>
+          <Typography variant="h6">Selected Data Points:</Typography>
+          <ul>
+            {dataPoints.map((point, index) => (
+              <li key={index}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={selectedDataPoints.includes(index)}
+                      onChange={() => handleDataPointSelection(index)}
+                    />
+                  }
+                  label={`Point ${index} (${point.x.toFixed(
+                    2
+                  )}, ${point.y.toFixed(2)}) - ${point.label}`}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div style={{ flex: "2", width: "66.66%" }}>
+          {chartData && (
+            <Scatter
+              data={chartData}
+              options={chartOptions}
+              onGotPointerCapture={(elems: any) => {
+                if (elems.length > 0) {
+                  const index = elems[0].index;
+                  handleDataPointSelection(index);
+                }
+              }}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 };
